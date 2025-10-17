@@ -1,5 +1,5 @@
 local bg_col = "#000000"
-local toggle_bg_picture = false
+local toggle_bg_picture = toggles.toggle_bg_picture
 
 local primary_col = "#ec6e4e"
 local secondary_col = "#E446C4"
@@ -7,7 +7,6 @@ local secondary_col = "#E446C4"
 local ninbot_anchor = "topright" -- topleft, top, topright, left, right, bottomleft, bottomright
 local ninbot_opacity = 1 -- 0 to 1
 
-local res_1440 = false
 
 local e_count = 		{ enabled = true, x = 1340, y = 300, size = 5, colorkey = true} 
 local thin_pie = 		{ enabled = true, x = 1250, y = 500, size = 4, colorkey = true} 
@@ -15,33 +14,36 @@ local thin_percent =	{ enabled = true, x = 1300, y = 850, size = 6}
 local tall_pie = 		{ enabled = true, x = 1250, y = 500, size = 4, colorkey = true} -- Leave same as thin for seamlessness
 local tall_percent =	{ enabled = true, x = 1300, y = 850, size = 6} -- Leave same as thin for seamlessness
 
-local toggle_paceman = false
-local toggle_lingle = false
+local keybinds = require("keybinds")
+local toggles = require("toggles")
+local paths = require("paths")
 
-local thin_key = "*-Alt_L"
-local wide_key = "*-V"
-local tall_key = "*-F4"
-local show_ninbot_key = "*-apostrophe"
-local toggle_fullscreen_key = "Shift-O"
-local open_ninbot_key = "Shift-P"
-local toggle_remaps_key = "Insert"
+local res_1440 = toggles.res_1440
+local toggle_paceman = toggles.toggle_paceman
+local toggle_lingle = toggles.toggle_lingle
+
+local thin_key = keybinds.thin_key
+local wide_key = keybinds.wide_key
+local tall_key = keybinds.tall_key
+local show_ninbot_key = keybinds.show_ninbot_key
+local toggle_fullscreen_key = keybinds.toggle_fullscreen_key
+local open_ninbot_key = keybinds.open_ninbot_key
+local toggle_remaps_key = keybinds.toggle_remaps_key
 
 local remaps_text_config = { text = "", x = 100, y = 100, size = 2}
 
 -- DON'T CHANGE ANYTHING AFTER THIS UNLESS YOU KNOW WHAT YOU"RE DOING
 
-local waywall_config_path = os.getenv("HOME") .. "/.config/waywall/"
-local home_path = os.getenv("HOME")
-local bg_path = waywall_config_path .. 	"images/background.png"
 
-local pacem_path = 		home_path .. 	"mcsr-apps/paceman-tracker-0.7.0.jar"
-local nb_path = 		home_path ..	"mcsr-apps/Ninjabrain-Bot-1.5.1.jar"
-local overlay_path = 	home_path ..	"mcsr-apps/measuring_overlay.png"
-local lingle_path =     home_path ..	"mcsr-apps/Lingle-0.5.6.jar"
+local bg_path      = paths.bg_path
+local pacem_path   = paths.pacem_path
+local nb_path      = paths.nb_path
+local overlay_path = paths.overlay_path
+local lingle_path  = paths.lingle_path
 
 local keyboard_remaps = require("remaps").remapped_kb
 local other_remaps = require("remaps").normal_kb
-local remaps_active = true
+local remaps_active = toggles.remaps_active
 
 local waywall = require("waywall")
 local helpers = require("waywall.helpers")
@@ -447,15 +449,23 @@ config.actions = {
 		if toggle_paceman then exec_pacem() end
 	end,
 
-	[toggle_remaps_key] = function()
+	[keybinds.toggle_remaps_key] = function()
 		if rebind_text then
 			rebind_text:close()
 			rebind_text = nil
 		end
-		remaps_active = not remaps_active
-		waywall.set_remaps(remaps_active and keyboard_remaps or other_remaps)
-		if not remaps_active then
-			rebind_text = waywall.text(remaps_text_config.text, remaps_text_config.x, remaps_text_config.y, "#FFFFFF", remaps_text_config.size)
+
+		toggles.remaps_active = not toggles.remaps_active
+		waywall.set_remaps(toggles.remaps_active and keyboard_remaps or other_remaps)
+
+		if not toggles.remaps_active then
+			rebind_text = waywall.text(
+				remaps_text_config.text,
+				remaps_text_config.x,
+				remaps_text_config.y,
+				"#FFFFFF",
+				remaps_text_config.size
+			)
 		end
 	end,
 
