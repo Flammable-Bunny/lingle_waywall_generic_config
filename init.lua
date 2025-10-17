@@ -16,6 +16,7 @@ local tall_pie = 		{ enabled = true, x = 1250, y = 500, size = 4, colorkey = tru
 local tall_percent =	{ enabled = true, x = 1300, y = 850, size = 6} -- Leave same as thin for seamlessness
 
 local toggle_paceman = false
+local toggle_lingle = false
 
 local thin_key = "*-Alt_L"
 local wide_key = "*-V"
@@ -30,11 +31,13 @@ local remaps_text_config = { text = "", x = 100, y = 100, size = 2}
 -- DON'T CHANGE ANYTHING AFTER THIS UNLESS YOU KNOW WHAT YOU"RE DOING
 
 local waywall_config_path = os.getenv("HOME") .. "/.config/waywall/"
+local home_path = os.getenv("HOME")
 local bg_path = waywall_config_path .. 	"resources/background.png"
 
-local pacem_path = 		waywall_config_path .. 	"resources/paceman-tracker-0.7.0.jar"
-local nb_path = 		waywall_config_path ..	"resources/Ninjabrain-Bot-1.5.1.jar"
-local overlay_path = 	waywall_config_path ..	"resources/measuring_overlay.png"
+local pacem_path = 		home_path .. 	"mcsr-apps/paceman-tracker-0.7.0.jar"
+local nb_path = 		home_path ..	"mcsr-apps/Ninjabrain-Bot-1.5.1.jar"
+local overlay_path = 	home_path ..	"mcsr-apps/measuring_overlay.png"
+local lingle_path =     home_path ..	"mcsr-apps/Lingle-0.5.6.jar"
 
 local keyboard_remaps = require("remaps").remapped_kb
 local other_remaps = require("remaps").normal_kb
@@ -81,6 +84,19 @@ local exec_pacem = function()
 	end
 end
 
+--*********************************************************************************************** LINGLE
+local is_lingle_running = function()
+	local handle = io.popen("pgrep -f 'lingle..*'")
+	local result = handle:read("*l")
+	handle:close()
+	return result ~= nil
+end
+
+local exec_lingle = function()
+	if not is_lingle_running() then
+		waywall.exec("java -jar " .. lingle_path .. " --nogui")
+	end
+end
 
 --*********************************************************************************************** NINJABRAIN
 local is_ninb_running = function()
@@ -427,6 +443,7 @@ config.actions = {
 
 	[open_ninbot_key] = function()
 		exec_ninb()
+		if toggle_lingle then exec_lingle() end
 		if toggle_paceman then exec_pacem() end
 	end,
 
