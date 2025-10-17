@@ -5,7 +5,7 @@ local keybinds = {
     show_ninbot_key = "*-shownbbplaceholder",
     toggle_fullscreen_key = "fullscreenplaceholder",
     open_ninbot_key = "openappsplaceholder",
-    toggle_remaps_key = "Insert",
+    toggle_remaps_key = "toggleremapsplaceholder",
 }
 
 return keybinds
