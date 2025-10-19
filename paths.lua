@@ -1,8 +1,6 @@
 local toggles = require("toggles")
 
 local home = os.getenv("HOME")
-
-local home = os.getenv("HOME")
 local waywall_config = home .. "/.config/waywall/"
 
 local paths = {
