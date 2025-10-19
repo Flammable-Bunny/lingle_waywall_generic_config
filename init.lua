@@ -1,3 +1,4 @@
+local toggles = require("toggles")
 local bg_col = "#000000"
 local toggle_bg_picture = toggles.toggle_bg_picture
 
@@ -15,7 +16,6 @@ local tall_pie = 		{ enabled = true, x = 1250, y = 500, size = 4, colorkey = tru
 local tall_percent =	{ enabled = true, x = 1300, y = 850, size = 6} -- Leave same as thin for seamlessness
 
 local keybinds = require("keybinds")
-local toggles = require("toggles")
 local paths = require("paths")
 
 local res_1440 = toggles.res_1440
