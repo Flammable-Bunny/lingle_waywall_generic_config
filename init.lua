@@ -45,6 +45,15 @@ local keyboard_remaps = require("remaps").remapped_kb
 local other_remaps = require("remaps").normal_kb
 local remaps_active = toggles.remaps_active
 
+local function build_remaps(active_normal)
+    local m = {}
+    for k,v in pairs(keyboard_remaps) do m[k] = v end
+    if active_normal then
+        for k,v in pairs(other_remaps) do m[k] = v end
+    end
+    return m
+end
+
 local waywall = require("waywall")
 local helpers = require("waywall.helpers")
 
@@ -53,7 +62,7 @@ local config = {
         layout = "us",
         repeat_rate = 40,
         repeat_delay = 300,
-		remaps = keyboard_remaps,
+		remaps = build_remaps(true),
         sensitivity = 1.0,
         confine_pointer = false,
     },
@@ -449,25 +458,11 @@ config.actions = {
 		if toggle_paceman then exec_pacem() end
 	end,
 
-	[keybinds.toggle_remaps_key] = function()
-		if rebind_text then
-			rebind_text:close()
-			rebind_text = nil
-		end
-
-		toggles.remaps_active = not toggles.remaps_active
-		waywall.set_remaps(toggles.remaps_active and keyboard_remaps or other_remaps)
-
-		if not toggles.remaps_active then
-			rebind_text = waywall.text(
-				remaps_text_config.text,
-				remaps_text_config.x,
-				remaps_text_config.y,
-				"#FFFFFF",
-				remaps_text_config.size
-			)
-		end
-	end,
+[keybinds.toggle_remaps_key] = function()
+    if rebind_text then rebind_text = nil end
+    toggles.remaps_active = not toggles.remaps_active
+    waywall.set_remaps(build_remaps(toggles.remaps_active))
+end,
 
 
 }
